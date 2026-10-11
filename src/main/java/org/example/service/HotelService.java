@@ -1,6 +1,7 @@
 package org.example.service;
 
 import org.example.entity.Hotel;
+import org.example.exception.ResourceNotFoundException;
 import org.example.repository.HotelRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,8 @@ public class HotelService {
     }
 
     public Hotel getHotelById(Long id){
-        return hotelRepository.findById(id).orElseThrow(() -> new RuntimeException("Отель с id " + id + "не найден"));
+        if (!hotelRepository.existsById(id)) throw new ResourceNotFoundException("Отель с id " + id + " не найден");
+        return hotelRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Отель с id " + id + "не найден"));
     }
 
     public Long countHotels(){

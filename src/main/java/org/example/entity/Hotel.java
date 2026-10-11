@@ -5,25 +5,36 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "hotels")
 public class Hotel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotBlank(message = "Название отеля не может быть пустым")
+    @Column(nullable = false)
     private String name;
+
     @Min(value = 1, message = "Отель должен иметь минимум 1 звезду")
     @Max(value = 5, message = "Отель может иметь максимум 5 звезд")
-    @Column(name = "count_stars")
-    private int countStars;
+    @Column(name = "count_stars", nullable = false)
+    private Integer countStars;
+
     @NotBlank(message = "Адрес не может быть пустым")
+    @Column(nullable = false)
     private String address;
+
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Room> rooms = new ArrayList<>();
 
     public Hotel() {
     }
 
-    public Hotel(String name, int countStars, String address) {
+    public Hotel(String name, Integer countStars, String address) {
         this.name = name;
         this.countStars = countStars;
         this.address = address;
@@ -45,11 +56,11 @@ public class Hotel {
         this.name = name;
     }
 
-    public int getCountStars() {
+    public Integer getCountStars() {
         return countStars;
     }
 
-    public void setCountStars(int countStars) {
+    public void setCountStars(Integer countStars) {
         this.countStars = countStars;
     }
 
@@ -59,6 +70,14 @@ public class Hotel {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
     }
 
     @Override
