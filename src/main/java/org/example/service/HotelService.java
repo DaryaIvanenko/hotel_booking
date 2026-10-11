@@ -36,4 +36,12 @@ public class HotelService {
     public void deleteAllHotels(){
         hotelRepository.deleteAll();
     }
+
+    public Hotel updateHotel(Long id, Hotel updateHotel){
+        Hotel existHotel = getHotelById(id);
+        existHotel.setName(updateHotel.getName());
+        existHotel.setAddress(updateHotel.getAddress());
+        existHotel.setCountStars(updateHotel.getCountStars());
+        return hotelRepository.save(existHotel);
+    }
 }

@@ -1,6 +1,9 @@
 package org.example.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "hotels")
@@ -8,9 +11,13 @@ public class Hotel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank(message = "Название отеля не может быть пустым")
     private String name;
+    @Min(value = 1, message = "Отель должен иметь минимум 1 звезду")
+    @Max(value = 5, message = "Отель может иметь максимум 5 звезд")
     @Column(name = "count_stars")
     private int countStars;
+    @NotBlank(message = "Адрес не может быть пустым")
     private String address;
 
     public Hotel() {
