@@ -50,9 +50,9 @@ public class RoomController {
         return roomService.getFilterRooms(type, maxPrice, minPrice, maxCapacity, minCapacity);
     }
 
-    @PostMapping("/hotel/{id}")
-    public Room createRoom(@PathVariable Long id, @Valid @RequestBody Room room){
-        return roomService.saveRoom(id, room);
+    @PostMapping("/hotel/{hotelId}")
+    public Room createRoom(@PathVariable Long hotelId, @Valid @RequestBody Room room){
+        return roomService.saveRoom(hotelId, room);
     }
 
     @DeleteMapping

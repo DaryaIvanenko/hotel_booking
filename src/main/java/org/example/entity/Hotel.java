@@ -1,5 +1,6 @@
 package org.example.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -29,15 +30,17 @@ public class Hotel {
     private String address;
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Room> rooms = new ArrayList<>();
 
     public Hotel() {
     }
 
-    public Hotel(String name, Integer countStars, String address) {
+    public Hotel(String name, Integer countStars, String address, List<Room> rooms) {
         this.name = name;
         this.countStars = countStars;
         this.address = address;
+        this.rooms = rooms;
     }
 
     public Long getId() {
