@@ -34,6 +34,11 @@ public class Booking {
     @JsonBackReference
     private Room room;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", nullable = false)
+    @JsonBackReference
+    private Client client;
+
     public Booking() {
     }
 
@@ -82,6 +87,14 @@ public class Booking {
 
     public void setRoom(Room room) {
         this.room = room;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     @Override

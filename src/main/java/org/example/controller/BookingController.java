@@ -26,9 +26,9 @@ public class BookingController {
         return bookingService.getBookingById(id);
     }
 
-    @PostMapping("/room/{roomId}")
-    public Booking createBooking(@PathVariable Long roomId, @Valid @RequestBody Booking booking){
-        return bookingService.saveBooking(roomId, booking);
+    @PostMapping("/room/{roomId}/client/{clientId}")
+    public Booking createBooking(@PathVariable Long roomId, @PathVariable Long clientId, @Valid @RequestBody Booking booking){
+        return bookingService.saveBooking(roomId, clientId, booking);
     }
 
     @DeleteMapping
