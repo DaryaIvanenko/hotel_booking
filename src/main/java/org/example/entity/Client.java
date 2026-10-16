@@ -1,9 +1,11 @@
 package org.example.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,25 +21,31 @@ public class Client {
     private String name;
     @NotBlank(message = "Почта не может быть пустой или состоять только из пробелов")
     @Email
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
     @NotBlank(message = "Номер телефона не может быть пустым или состоять только из пробелов")
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
-
+    @NotBlank(message = "Пароль не может быть пустым или состоять только из пробелов")
+    @Column(nullable = false)
+    private String password;
+    @NotNull(message = "Роль обязательно должна быть указана")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role;
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonIgnore
     private List<Booking> bookings = new ArrayList<>();
 
     public Client() {
     }
 
-    public Client(Long id, String name, String email, String phoneNumber, List<Booking> bookings) {
-        this.id = id;
+    public Client(String name, String email, String phoneNumber, String password, UserRole role) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.bookings = bookings;
+        this.password = password;
+        this.role = role;
     }
 
     public Long getId() {
@@ -80,14 +88,19 @@ public class Client {
         this.bookings = bookings;
     }
 
-    @Override
-    public String toString() {
-        return "Client{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", bookings=" + bookings +
-                '}';
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -43,6 +44,10 @@ public class RoomService {
         return roomRepository.filterRooms(type, maxPrice, minPrice, maxCapacity, minCapacity);
     }
 
+    public List<Room> getAvailableRoomsInHotel(Long hotelId, LocalDate startDate, LocalDate endDate){
+        return roomRepository.findAvailableRoom(hotelId, startDate, endDate);
+    }
+
     public Long countRooms(){
         return roomRepository.count();
     }
@@ -62,12 +67,14 @@ public class RoomService {
         roomRepository.deleteById(id);
     }
 
-    public Room updateRoom(Long id, Room updateRoom){
+    public Room updateRoom(Long id, Long hotelId, Room updateRoom){
         Room existRoom = getRoomById(id);
+        Hotel hotel = hotelService.getHotelById(hotelId);
         existRoom.setCapacity(updateRoom.getCapacity());
         existRoom.setNumber(updateRoom.getNumber());
         existRoom.setType(updateRoom.getType());
         existRoom.setPrice(updateRoom.getPrice());
+        existRoom.setHotel(hotel);
         return roomRepository.save(existRoom);
     }
 

@@ -4,9 +4,12 @@ import jakarta.validation.Valid;
 import org.example.entity.Room;
 import org.example.entity.RoomType;
 import org.example.service.RoomService;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -50,23 +53,34 @@ public class RoomController {
         return roomService.getFilterRooms(type, maxPrice, minPrice, maxCapacity, minCapacity);
     }
 
+    @GetMapping("/available")
+    public List<Room> getAvailableRoomsByHotel(@RequestParam Long hotelId,
+                                               @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                               @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate){
+        return roomService.getAvailableRoomsInHotel(hotelId, startDate, endDate);
+    }
+
     @PostMapping("/hotel/{hotelId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public Room createRoom(@PathVariable Long hotelId, @Valid @RequestBody Room room){
         return roomService.saveRoom(hotelId, room);
     }
 
     @DeleteMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteAllRooms(){
         roomService.deleteAllRooms();
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteRoomById(@PathVariable Long id){
         roomService.deleteRoomById(id);
     }
 
-    @PutMapping("/{id}")
-    public Room updateRoom(@PathVariable Long id, @Valid @RequestBody Room room){
-        return roomService.updateRoom(id, room);
+    @PutMapping("/{id}/hotel/{hotelId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Room updateRoom(@PathVariable Long id, @PathVariable Long hotelId, @Valid @RequestBody Room room){
+        return roomService.updateRoom(id, hotelId, room);
     }
 }

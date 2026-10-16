@@ -1,5 +1,6 @@
 package org.example.repository;
 
+import org.example.entity.Booking;
 import org.example.entity.Room;
 import org.example.entity.RoomType;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -26,4 +28,11 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
                            @Param("minPrice") BigDecimal minPrice,
                            @Param("maxCapacity") Integer maxCapacity,
                            @Param("minCapacity") Integer minCapacity);
+
+    @Query("SELECT r FROM Room r WHERE r.hotel.id = :hotelId AND r.id NOT IN (" +
+            "SELECT b.room.id FROM Booking b WHERE :startDate < b.endDate " +
+            "AND :endDate > b.startDate)")
+    List<Room> findAvailableRoom(@Param("hotelId") Long hotelId,
+                                 @Param("startDate") LocalDate startDate,
+                                 @Param("endDate") LocalDate endDate);
 }

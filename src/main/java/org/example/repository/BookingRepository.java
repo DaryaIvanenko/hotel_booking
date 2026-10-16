@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
@@ -16,4 +17,5 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     boolean existOverlappingBookings(@Param("roomId") Long roomId,
                                      @Param("startDate") LocalDate startDate,
                                      @Param("endDate") LocalDate endDate);
+    List<Booking> findByClientId(Long clientId);
 }

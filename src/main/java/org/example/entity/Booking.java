@@ -36,7 +36,6 @@ public class Booking {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
-    @JsonBackReference
     private Client client;
 
     public Booking() {
